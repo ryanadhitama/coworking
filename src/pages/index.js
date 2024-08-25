@@ -1,5 +1,3 @@
-// pages/index.js
-// import CoworkingMap from "@/components/coworking";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import { useMemo, useRef, useState } from "react";
@@ -35,17 +33,8 @@ export default function Home() {
       coordinates: [-6.2204, 106.8296],
     },
   ]);
-
-  const Map = useMemo(
-    () =>
-      dynamic(() => import("@/components/coworking"), {
-        loading: () => <p>A map is loading</p>,
-        ssr: false,
-      }),
-    []
-  );
   const [searchQuery, setSearchQuery] = useState("");
-  const [viewMode, setViewMode] = useState("list");
+  const [viewMode, setViewMode] = useState("grid");
   const mapRef = useRef();
   const [selectedLocationId, setSelectedLocationId] = useState(null);
   const handleLocationClick = (location) => {
@@ -59,6 +48,15 @@ export default function Home() {
     (location) =>
       location.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       location.address.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const Map = useMemo(
+    () =>
+      dynamic(() => import("@/components/coworking"), {
+        loading: () => <p>A map is loading</p>,
+        ssr: false,
+      }),
+    []
   );
 
   return (
