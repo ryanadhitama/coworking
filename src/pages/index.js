@@ -1,42 +1,17 @@
+import LocationCard from "@/components/location";
+import SwitchMode from "@/components/switch-mode";
+import { locations } from "@/utils/location";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import { useMemo, useRef, useState } from "react";
 
 export default function Home() {
-  const [locations] = useState([
-    {
-      id: 1,
-      name: "GoWork - Pacific Place",
-      image: "/images/coworking-a.png", // Add your image paths here
-      address: "Pacific Place Mall, SCBD, Jakarta",
-      coordinates: [-6.2251, 106.8088],
-    },
-    {
-      id: 2,
-      name: "WeWork - Revenue Tower",
-      image: "/images/coworking-b.png",
-      address: "Revenue Tower, SCBD, Jakarta",
-      coordinates: [-6.2258, 106.8093],
-    },
-    {
-      id: 3,
-      name: "CoHive - Plaza Kuningan",
-      image: "/images/coworking-c.png",
-      address: "Plaza Kuningan, Jakarta Selatan",
-      coordinates: [-6.2101, 106.8329],
-    },
-    {
-      id: 4,
-      name: "Multivision Tower",
-      image: "/images/coworking-d.png",
-      address: "Multivision Tower, Kuningan, Jakarta Selatan",
-      coordinates: [-6.2204, 106.8296],
-    },
-  ]);
+  
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState("grid");
-  const mapRef = useRef();
   const [selectedLocationId, setSelectedLocationId] = useState(null);
+
+  const mapRef = useRef();
   const handleLocationClick = (location) => {
     setSelectedLocationId(location.id);
     if (mapRef.current) {
@@ -71,24 +46,7 @@ export default function Home() {
             <h2 className="text-2xl font-bold mb-3 md:mb-0">
               Co-working Spaces
             </h2>
-            <div className="flex space-x-2">
-              <button
-                className={`px-4 py-2 rounded-lg font-medium ${
-                  viewMode === "list" ? "bg-blue-500 text-white" : "bg-gray-200"
-                }`}
-                onClick={() => setViewMode("list")}
-              >
-                List
-              </button>
-              <button
-                className={`px-4 py-2 rounded-lg font-medium ${
-                  viewMode === "grid" ? "bg-blue-500 text-white" : "bg-gray-200"
-                }`}
-                onClick={() => setViewMode("grid")}
-              >
-                Grid
-              </button>
-            </div>
+            <SwitchMode viewMode={viewMode} onSwitchMode={setViewMode} />
           </div>
 
           {/* Search Input */}
@@ -106,19 +64,11 @@ export default function Home() {
             }`}
           >
             {filteredLocations.map((location) => (
-              <li
+              <LocationCard
+                location={location}
                 key={location.id}
                 onClick={() => handleLocationClick(location)}
-                className="p-3 bg-white rounded-lg shadow cursor-pointer hover:bg-gray-200"
-              >
-                <img
-                  src={location.image}
-                  alt={location.name}
-                  className="w-full h-32 object-cover rounded-md mb-2"
-                />
-                <h3 className="text-lg font-semibold">{location.name}</h3>
-                <p className="text-sm text-gray-600">{location.address}</p>
-              </li>
+              />
             ))}
           </ul>
         </div>
